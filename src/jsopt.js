@@ -96,5 +96,10 @@ var $ = (() => {
 })();
 
 // TODO
-//   > HTML Elements bewerken
+//   > HTML Elements bewerken (attr)
+//   > HTML Elements find
+//   > append
+//   > prepend
+//   > off() (event listener)
+//   > css edit
 //   > .on(eventlistener)
