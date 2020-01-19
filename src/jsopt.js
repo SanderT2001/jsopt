@@ -13,8 +13,17 @@ class JsOpt extends JsOptCore
         super(input);
     }
 
+    // calls func with argument {event} e
+    ready(callback = RequiredArgument('callback'))
+    {
+        document.addEventListener("DOMContentLoaded", (e) => {
+            callback(e);
+        });
+    }
+
     /**
      * Changes the innerHTML of the @var JsOptCore::elements to the given value in @param newValue.
+     * @TODO (Sander) Als input, dan valu veranderen, anders gewoon de html
      *
      * @param {string}|'' newValue
      */
