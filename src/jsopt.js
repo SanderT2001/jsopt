@@ -87,6 +87,5 @@ var $ = (() => {
 })();
 
 // TODO
-//   > Class Diagram maken
 //   > HTML Elements bewerken
 //   > .on(eventlistener)

@@ -6,6 +6,12 @@
  * Class containing Core Functionalities for JsOpt.
  * JsOpt is a minimalistic Library to make working with Vanilla JavaScript more plesant.
  *
+ * JsOpt accepts the following items when creating a new JsOpt Instance:
+ *   > selector (example: '#id-of-element' or '.class-of-elements')
+ *   > object
+ *   > array
+ *   > string
+ *
  * @requires ECMAScript (ES) 6.* or up
  *
  * @version 0.1
@@ -29,7 +35,7 @@ class JsOptCore
     {
         // Set or get the elements based on the fact if the input is a queryselector or it is a data already.
         this.elements = ((this.isQuerySelector(input) === true) ? document.querySelectorAll(input) : input);
-        if ((this.isEmpty() == true) && (this.debug == true)) {
+        if ((this.isEmpty() === true) && (this.debug === true)) {
             console.warn('No elements found by the given QuerySelector.');
         }
         return this;
