@@ -119,36 +119,53 @@ class JsOpt extends JsOptCore
         // Vanilla JS: document.getElementById("myDIV").removeEventListener("mousemove", myFunction);
     }
 
-    prepend()
+    prepend(value)
     {
-        // als html:
-        //   iets meer beforeend
-        //   Element.insertAdjacentHTML()
-        //   https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
-        // als nodelist:
-        //   node.prepend(textnode);
+        // Just inside the element, before its first child.
+        this.addToElements('afterbegin', value);
+        return this;
     }
 
-    append()
+    append(value)
     {
-        // als html:
-        //   iets meer beforeend
-        //   Element.insertAdjacentHTML()
-        //   https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
-        // als nodelist:
-        //   node.appendChild(textnode);
+        // Just inside the element, after its last child.
+        this.addToElements('beforeend', value);
+        return this;
     }
 
-    css()
+    /**
+     * Adds or Edits a CSS Property to the @var JsOptCore::elements with the name given in @param property and with the value given in @param value.
+     *
+     * Vanilla JS:
+     * document.elem.style.border = "3px solid #FF0000";
+     *
+     * @param {string} property CSS Compatible Property!
+     * @param {string} value|''
+     */
+    css(property = RequiredArgument('property'), value = '')
     {
-        //document.elm.style.border = "3px solid #FF0000";
+        this.foreach((index, element) => {
+            element.style[property] = value;
+        });
+        return this;
     }
 
-    attr()
+    /**
+     * Edit an attribute with the name of @param name of the @var JsOptCore::elements to the given value in @param value
+     *
+     * Vanilla JS:
+     * document.getElementsByTagName("H1")[0].setAttribute("class", "democlass");
+     *
+     * @param {string} name
+     * @param {string} value|''
+     */
+    attr(name = RequiredArgument('name'), value = '')
     {
-        //document.getElementsByTagName("H1")[0].setAttribute("class", "democlass");
+        this.foreach((index, element) => {
+            element.setAttribute(name, value);
+        });
+        return this;
     }
-
 
     /**
      * Changes the CSS Display Property of the @var JsOptCore::elements to the given @param property.
@@ -163,6 +180,28 @@ class JsOpt extends JsOptCore
         });
         return this;
     }
+
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+     */
+    addToElements(position, value)
+    {
+        if (typeof value === 'string') {
+            this.foreach((index, element) => {
+                element.insertAdjacentHTML(position, value);
+            });
+        } else if ((value instanceof JsOpt === true) || (value instanceof JsOptCore === true)) {
+            let valueNodes = value.elements;
+
+            // Add every node in @var valueNodes to every element in @var JsOptCore::elements.
+            this.foreach((index, element) => {
+                value.foreach((valueNodeIndex, valueNode) => {
+                    element.insertAdjacentHTML(position, valueNode.outerHTML);
+                });
+            });
+        }
+        return this;
+    };
 }
 
 /**
