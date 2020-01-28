@@ -41,6 +41,26 @@ class JsOptCore
         return this;
     }
 
+    /**
+     * Finds DOM-Elements in the current @var JsOptCore::elements by the QuerySelector in @param selector.
+     *
+     * This will also replace the @var JsOptCore::elements with the newly found elements.
+     * When no elements are found, @var JsOptCore::elements is an empty array.
+     *
+     * @param {string} selector
+     */
+    find(selector = RequiredArgument('querySelector'))
+    {
+        ValidateArguments([{type: 'string', value: selector, regex: /^([#]|[.])/, regexExplanation: 'QuerySelector'}]);
+
+        this.elements = document.querySelector(this.getQuerySelectors()[0])
+                                .querySelectorAll(selector);
+        if ((this.isEmpty() === true) && (this.debug === true)) {
+            console.warn('No elements found by the given QuerySelector.');
+        }
+        return this;
+    }
+
     foreach(callback = RequiredArgument('callback'))
     {
         ValidateArguments([{type: 'function', value: callback}]);
@@ -56,6 +76,7 @@ class JsOptCore
         return(
             (typeof input === 'string') &&
             // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
+            // @TODO (Sander) Deze regex moet globaal en ook voor find() gebruikt worden!
             (/^([#]|[.])/.test(input) === true)
         );
     }
