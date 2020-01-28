@@ -65,13 +65,18 @@ class JsOptCore
         let queryselectors = [];
         for (var i = 0; i < this.elements.length; i++) {
             let element = this.elements[i];
-            if (this.isEmpty(element.id) === true && this.isEmpty(element.className) === false) {
+            let prefix = null;
+            let selector = null;
+            if ((this.isEmpty(element.id) === true) && (this.isEmpty(element.className) === false)) {
                 // class selector
-                queryselectors.push(`.${element.className}`);
-            } else if (this.isEmpty(element.id) === false && this.isEmpty(element.className) === true) {
+                prefix = '.';
+                selector = element.className;
+            } else if ((this.isEmpty(element.id) === false) && (this.isEmpty(element.className) === true)) {
                 // id selector
-                queryselectors.push(`#${element.id}`);
+                prefix = '#';
+                selector = element.id;
             }
+            queryselectors.push(prefix + selector);
         }
         return queryselectors;
     }

@@ -9,20 +9,32 @@ class JsOpt extends JsOptCore
 {
     constructor(input = RequiredArgument('input'))
     {
-        // Init core
+        // Init JsOptCore
         super(input);
     }
 
-    // calls func with argument {event} e
+    /**
+     * Fires the @param callback function when the DOM is Ready.
+     *
+     * @param {function} callback Containing the callback function.
+     *                            The callback will be invoked with the following parameters given:
+     *                              1. {event} e > The actual event that is created when the DOM is Ready.
+     */
     ready(callback = RequiredArgument('callback'))
     {
+        ValidateArguments([{type: 'function', value: callback}]);
+
         document.addEventListener("DOMContentLoaded", (e) => {
             callback(e);
         });
+        return this;
     }
 
     /**
-     * Find DOM-Elements in the current element by the QuerySelector in @param selector.
+     * Finds DOM-Elements in the current @var JsOptCore::elements by the QuerySelector in @param selector.
+     *
+     * This will also replace the @var JsOptCore::elements with the newly found elements.
+     * When no elements are found, @var JsOptCore::elements is an empty array.
      *
      * @param {string} selector
      */
@@ -40,7 +52,6 @@ class JsOpt extends JsOptCore
 
     /**
      * Changes the innerHTML of the @var JsOptCore::elements to the given value in @param newValue.
-     * @TODO (Sander) Als input, dan valu veranderen, anders gewoon de html
      *
      * @param {string}|'' newValue
      */
@@ -82,6 +93,63 @@ class JsOpt extends JsOptCore
         return this;
     }
 
+    on(eventName = RequiredArgument('eventName'), callback = RequiredArgument('callback'))
+    {
+        // @TODO (Sander) Check Type van arguments
+        // @TODO (Sander) Docs
+        // @TODO (Sander) Testen
+        // @TODO (Sander) Docs: Niet checken of event type wel bestaat, ivm dat user een custom event kan aanmaken!
+        // @TODO (Sander) Door alle elements heen loopen en toevoegen
+        // @TODO (Sander) Lookup Table opbouwen van gezette events en hun callback functie, i.v.m. off()
+        // Vanilla JS: document.getElementById("myBtn").addEventListener("click", displayDate);
+    }
+
+    off()
+    {
+        // @TODO (Sander) Check Type van arguments
+        // @TODO (Sander) Docs
+        // @TODO (Sander) Testen
+        // @TODO (Sander) Docs: Niet checken of event type wel bestaat, ivm dat user een custom event kan aanmaken!
+        // @TODO (Sander) Door alle elements heen loopen en verwijderen
+        // @TODO (Sander) Gebruik maken van lookup table
+        // @TODO (Sander) Als function niet meegegeven is dan alles verwijderen (Clone Node)
+        //                var old_element = document.getElementById("btn");
+        //                var new_element = old_element.cloneNode(true);
+        //                old_element.parentNode.replaceChild(new_element, old_element);
+        // Vanilla JS: document.getElementById("myDIV").removeEventListener("mousemove", myFunction);
+    }
+
+    prepend()
+    {
+        // als html:
+        //   iets meer beforeend
+        //   Element.insertAdjacentHTML()
+        //   https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+        // als nodelist:
+        //   node.prepend(textnode);
+    }
+
+    append()
+    {
+        // als html:
+        //   iets meer beforeend
+        //   Element.insertAdjacentHTML()
+        //   https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+        // als nodelist:
+        //   node.appendChild(textnode);
+    }
+
+    css()
+    {
+        //document.elm.style.border = "3px solid #FF0000";
+    }
+
+    attr()
+    {
+        //document.getElementsByTagName("H1")[0].setAttribute("class", "democlass");
+    }
+
+
     /**
      * Changes the CSS Display Property of the @var JsOptCore::elements to the given @param property.
      *
@@ -119,3 +187,4 @@ var $ = (() => {
 //   > off() (event listener)
 //   > css edit
 //   > .on(eventlistener)
+//   > Volgorde van alles
