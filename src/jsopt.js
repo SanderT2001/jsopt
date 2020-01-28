@@ -188,3 +188,4 @@ var $ = (() => {
 //   > css edit
 //   > .on(eventlistener)
 //   > Volgorde van alles
+//   > Compacte versie maken (releases 1 file voor alles)
