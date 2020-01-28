@@ -60,6 +60,22 @@ class JsOptCore
         );
     }
 
+    getQuerySelectors()
+    {
+        let queryselectors = [];
+        for (var i = 0; i < this.elements.length; i++) {
+            let element = this.elements[i];
+            if (this.isEmpty(element.id) === true && this.isEmpty(element.className) === false) {
+                // class selector
+                queryselectors.push(`.${element.className}`);
+            } else if (this.isEmpty(element.id) === false && this.isEmpty(element.className) === true) {
+                // id selector
+                queryselectors.push(`#${element.id}`);
+            }
+        }
+        return queryselectors;
+    }
+
     /**
      * @param {mixed}|JsOptCore::elements value Containing the value to perform the empty check for.
      *
@@ -117,10 +133,9 @@ const ValidateArguments = (args) => {
     let invalid_args = [];
 
     for (let i = 0; i < args.length; i++) {
-        // @TODO (Sander) Invalidargument class
-        let txt = `\n  > argument #${i} must be of type \`${args[i].type}\`, \`${typeof args[i].value}\` given.`;
-
         if (typeof args[i].value != args[i].type) {
+            // @TODO (Sander) Invalidargument class
+            let txt = `\n  > argument #${i} must be of type \`${args[i].type}\`, \`${typeof args[i].value}\` given.`;
             invalid_args.push(txt);
             continue;
         }
@@ -129,7 +144,7 @@ const ValidateArguments = (args) => {
             (args[i].regex != null) &&
             (new RegExp(args[i].regex).test(args[i].value) === false)
         ) {
-            // @TODO (Sander) Ook regex error in txt
+            let txt = `\n  > argument #${i} must be a \`${args[i].regexExplanation}\`, \`${args[i].value}\` given.`;
             invalid_args.push(txt);
             continue;
         }

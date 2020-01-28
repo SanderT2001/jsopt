@@ -22,6 +22,20 @@ class JsOpt extends JsOptCore
     }
 
     /**
+     * Find DOM-Elements in the current element by the QuerySelector in @param selector.
+     *
+     * @param {string} selector
+     */
+    find(selector = RequiredArgument('querySelector'))
+    {
+        ValidateArguments([{type: 'string', value: selector, regex: /^([#]|[.])/, regexExplanation: 'QuerySelector'}]);
+
+        this.elements = document.querySelector(this.getQuerySelectors()[0])
+                                .querySelectorAll(selector);
+        return this;
+    }
+
+    /**
      * Changes the innerHTML of the @var JsOptCore::elements to the given value in @param newValue.
      * @TODO (Sander) Als input, dan valu veranderen, anders gewoon de html
      *
@@ -97,7 +111,6 @@ var $ = (() => {
 
 // TODO
 //   > HTML Elements bewerken (attr)
-//   > HTML Elements find
 //   > append
 //   > prepend
 //   > off() (event listener)
