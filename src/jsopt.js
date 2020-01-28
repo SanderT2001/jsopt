@@ -32,6 +32,9 @@ class JsOpt extends JsOptCore
 
         this.elements = document.querySelector(this.getQuerySelectors()[0])
                                 .querySelectorAll(selector);
+        if ((this.isEmpty() === true) && (this.debug === true)) {
+            console.warn('No elements found by the given QuerySelector.');
+        }
         return this;
     }
 
