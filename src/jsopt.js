@@ -242,8 +242,3 @@ var $ = (() => {
         return new JsOpt(input);
     };
 })();
-
-// TODO
-//   > Volgorde van alles
-//   > Compacte versie maken (releases 1 file voor alles)
-//   > Virtual DOM bijhouden o.i.d. i.v.m. event listeners.

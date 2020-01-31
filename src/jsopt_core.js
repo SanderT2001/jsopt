@@ -7,11 +7,11 @@
  * JsOpt is a minimalistic Library to make working with Vanilla JavaScript more plesant.
  *
  * JsOpt accepts the following items when creating a new JsOpt Instance:
- *   > selector (example: '#id-of-element' or '.class-of-elements')
- *   > object
- *   > array
- *   > string
- *   > event
+ *   > Selector (example: '#id-of-element' or '.class-of-elements')
+ *   > Event
+ *   > Object
+ *   > Array
+ *   > String
  *
  * @requires ECMAScript (ES) 6.* or up
  *
@@ -33,9 +33,25 @@ class JsOptCore
     elements = null;
 
     /**
-     * @type {Regex}
+     * @type {object}
+     * Object containing all the RegEx'es that are used in JsOpt.
      */
-    querySelectorRegex = /^([#]|[.])/;
+    regexCollection = {
+        queryselectorValidator: /^([#]|[.])/
+    };
+
+    /**
+     * Gets a RegEx from @var JsOptCore::regexCollection by it name given in @param key.
+     *
+     * @param {string} key
+     *
+     * @return {RegEx}|null Returns a string which is the found RegEx.
+     *                      Returns null when no RegEx could be found by the given @param key.
+     */
+    getRegex(key = RequiredArgument('key'))
+    {
+        return ((this.isEmpty(this.regexCollection[key]) === true) ? null : this.regexCollection[key]);
+    }
 
     constructor(input = RequiredArgument('input'))
     {
@@ -61,7 +77,7 @@ class JsOptCore
      */
     find(selector = RequiredArgument('querySelector'))
     {
-        ValidateArguments([{type: 'string', value: selector, regex: this.querySelectorRegex, regexExplanation: 'QuerySelector'}]);
+        ValidateArguments([{type: 'string', value: selector, regex: this.getRegex('queryselectorValidator'), regexExplanation: 'QuerySelector'}]);
 
         this.elements = document.querySelector(this.getQuerySelectors()[0])
                                 .querySelectorAll(selector);
@@ -89,7 +105,7 @@ class JsOptCore
         return(
             (typeof input === 'string') &&
             // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
-            (this.querySelectorRegex.test(input) === true)
+            (this.getRegex('queryselectorRegex').test(input) === true)
         );
     }
 
