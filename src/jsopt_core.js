@@ -32,6 +32,11 @@ class JsOptCore
      */
     elements = null;
 
+    /**
+     * @type {Regex}
+     */
+    querySelectorRegex = /^([#]|[.])/;
+
     constructor(input = RequiredArgument('input'))
     {
         // Set or get the elements based on the fact if the input is a queryselector or it is a data already.
@@ -56,7 +61,7 @@ class JsOptCore
      */
     find(selector = RequiredArgument('querySelector'))
     {
-        ValidateArguments([{type: 'string', value: selector, regex: /^([#]|[.])/, regexExplanation: 'QuerySelector'}]);
+        ValidateArguments([{type: 'string', value: selector, regex: this.querySelectorRegex, regexExplanation: 'QuerySelector'}]);
 
         this.elements = document.querySelector(this.getQuerySelectors()[0])
                                 .querySelectorAll(selector);
@@ -84,8 +89,7 @@ class JsOptCore
         return(
             (typeof input === 'string') &&
             // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
-            // @TODO (Sander) Deze regex moet globaal en ook voor find() gebruikt worden!
-            (/^([#]|[.])/.test(input) === true)
+            (this.querySelectorRegex.test(input) === true)
         );
     }
 

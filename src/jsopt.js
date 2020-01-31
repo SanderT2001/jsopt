@@ -129,7 +129,9 @@ class JsOpt extends JsOptCore
         } else {
             let callback = this.getEventList(eventName);
             if (this.isEmpty(callback) === true) {
-                // @TODO (Sander) Return value ok? Ook console.warn als debug aan staat
+                if (this.debug === true) {
+                    console.warn('No callback found. Check if the EventListener is set.');
+                }
                 return false;
             }
 
