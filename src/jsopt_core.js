@@ -11,6 +11,7 @@
  *   > object
  *   > array
  *   > string
+ *   > event
  *
  * @requires ECMAScript (ES) 6.* or up
  *
@@ -34,7 +35,11 @@ class JsOptCore
     constructor(input = RequiredArgument('input'))
     {
         // Set or get the elements based on the fact if the input is a queryselector or it is a data already.
-        this.elements = ((this.isQuerySelector(input) === true) ? document.querySelectorAll(input) : input);
+        if (this.isQuerySelector(input) === true) {
+            this.elements = document.querySelectorAll(input);
+        } else {
+            this.elements = ((this.isEventVariable(input) === true) ? input.target.childNodes : input);
+        }
         if ((this.isEmpty() === true) && (this.debug === true)) {
             console.warn('No elements found by the given QuerySelector.');
         }
@@ -65,8 +70,11 @@ class JsOptCore
     {
         ValidateArguments([{type: 'function', value: callback}]);
 
-        for (var i = 0; i < this.elements.length; i++) {
-            callback(i, this.elements[i]);
+        let isObject = (typeof this.elements === 'object');
+        let iterations = (this.elements.length == null) ? Object.keys(this.elements).length : this.elements.length;
+        for (var i = 0; i < iterations; i++) {
+            let index = (isObject === true) ? Object.keys(this.elements)[i] : i;
+            callback(index, this.elements[index]);
         }
         return this;
     }
@@ -79,6 +87,11 @@ class JsOptCore
             // @TODO (Sander) Deze regex moet globaal en ook voor find() gebruikt worden!
             (/^([#]|[.])/.test(input) === true)
         );
+    }
+
+    isEventVariable(eventVar)
+    {
+        return ((eventVar instanceof Event) && (this.isEmpty(eventVar.target.childNodes) === false));
     }
 
     getQuerySelectors()

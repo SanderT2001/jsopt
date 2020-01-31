@@ -7,6 +7,25 @@
  */
 class JsOpt extends JsOptCore
 {
+    eventlist = {};
+    setEventList(name, callback)
+    {
+        this.eventlist[name] = callback;
+        return true;
+    }
+
+    getEventList(name = null)
+    {
+        if (this.isEmpty(name) === true) {
+            return this.eventlist;
+        }
+
+        if (this.isEmpty(this.eventlist[name]) === true) {
+            return {};
+        }
+        return this.eventlist[name];
+    }
+
     constructor(input = RequiredArgument('input'))
     {
         // Init JsOptCore
@@ -73,30 +92,53 @@ class JsOpt extends JsOptCore
         return this;
     }
 
+    /**
+     * Vanilla JS:
+     * document.getElementById("myBtn").addEventListener("click", displayDate);
+     */
     on(eventName = RequiredArgument('eventName'), callback = RequiredArgument('callback'))
     {
         // @TODO (Sander) Check Type van arguments
         // @TODO (Sander) Docs
-        // @TODO (Sander) Testen
         // @TODO (Sander) Docs: Niet checken of event type wel bestaat, ivm dat user een custom event kan aanmaken!
-        // @TODO (Sander) Door alle elements heen loopen en toevoegen
-        // @TODO (Sander) Lookup Table opbouwen van gezette events en hun callback functie, i.v.m. off()
-        // Vanilla JS: document.getElementById("myBtn").addEventListener("click", displayDate);
+        this.foreach((index, element) => {
+            document.querySelector(this.getQuerySelectors()[index])
+                    .addEventListener(eventName, callback);
+
+            this.setEventList(eventName, callback);
+        });
+        return this;
     }
 
-    off()
+    /**
+     * Vanilla JS:
+     * document.getElementById("myDIV").removeEventListener("mousemove", myFunction);
+     */
+    off(eventName = null)
     {
         // @TODO (Sander) Check Type van arguments
         // @TODO (Sander) Docs
-        // @TODO (Sander) Testen
         // @TODO (Sander) Docs: Niet checken of event type wel bestaat, ivm dat user een custom event kan aanmaken!
-        // @TODO (Sander) Door alle elements heen loopen en verwijderen
-        // @TODO (Sander) Gebruik maken van lookup table
-        // @TODO (Sander) Als function niet meegegeven is dan alles verwijderen (Clone Node)
-        //                var old_element = document.getElementById("btn");
-        //                var new_element = old_element.cloneNode(true);
-        //                old_element.parentNode.replaceChild(new_element, old_element);
-        // Vanilla JS: document.getElementById("myDIV").removeEventListener("mousemove", myFunction);
+        if (this.isEmpty(eventName) === true) {
+            this.foreach((index, element) => {
+                $(this.eventlist).foreach((eventname, eventcallback) => {
+                    document.querySelector(this.getQuerySelectors()[index])
+                            .removeEventListener(eventname, eventcallback);
+                });
+            });
+        } else {
+            let callback = this.getEventList(eventName);
+            if (this.isEmpty(callback) === true) {
+                // @TODO (Sander) Return value ok? Ook console.warn als debug aan staat
+                return false;
+            }
+
+            this.foreach((index, element) => {
+                document.querySelector(this.getQuerySelectors()[index])
+                        .removeEventListener(eventName, callback);
+            });
+        }
+        return this;
     }
 
     prepend(value)
@@ -200,11 +242,6 @@ var $ = (() => {
 })();
 
 // TODO
-//   > HTML Elements bewerken (attr)
-//   > append
-//   > prepend
-//   > off() (event listener)
-//   > css edit
-//   > .on(eventlistener)
 //   > Volgorde van alles
 //   > Compacte versie maken (releases 1 file voor alles)
+//   > Virtual DOM bijhouden o.i.d. i.v.m. event listeners.
