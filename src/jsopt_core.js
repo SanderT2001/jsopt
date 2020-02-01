@@ -100,7 +100,7 @@ class JsOptCore
         return this;
     }
 
-    isQuerySelector(input)
+    isQuerySelector(input = RequiredArgument('input'))
     {
         return(
             (typeof input === 'string') &&
@@ -109,7 +109,7 @@ class JsOptCore
         );
     }
 
-    isEventVariable(eventVar)
+    isEventVariable(eventVar = RequiredArgument('eventVar'))
     {
         return ((eventVar instanceof Event) && (this.isEmpty(eventVar.target.childNodes) === false));
     }
