@@ -4,22 +4,42 @@
  * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
  *
  * Extension on JsOpt-Core containing HTML specific functionalities.
+ *
+ * @version 0.1
+ * @author Sander Tuinstra <sandert2001@hotmail.com>
  */
 class JsOpt extends JsOptCore
 {
+    /**
+     * @type {object}
+     * Object containing all the set Events for the @var JsOptCore::elements.
+     */
     eventlist = {};
-    setEventList(name, callback)
-    {
+
+    /**
+     * Sets a new Event in the @var JsOpt::eventlist
+     *
+     * @param {string} name
+     */
+    setEventList(name = RequiredArgument('name'), callback = RequiredArgument('callback')) {
+        ValidateArguments([
+            {type: 'string', value: name},
+            {type: 'function', value: callback}
+        ]);
+
         this.eventlist[name] = callback;
         return true;
     }
 
-    getEventList(name = null)
+    /**
+     * Gets an Event from @var JsOpt::eventlist by its name given in @param name.
+     *
+     * @param {string} name
+     *
+     * @return {function} Containing the callback function for this Event.
+     */
+    getEvent(name = RequiredArgument('name'))
     {
-        if (this.isEmpty(name) === true) {
-            return this.eventlist;
-        }
-
         if (this.isEmpty(this.eventlist[name]) === true) {
             return {};
         }
@@ -93,14 +113,21 @@ class JsOpt extends JsOptCore
     }
 
     /**
+     * Sets an Event on the @var JsOptCore::elements.
+     *
      * Vanilla JS:
      * document.getElementById("myBtn").addEventListener("click", displayDate);
+     *
+     * @param {string}   eventName Containing the name for the event to set.
+     *                               NOTE! Don't check if the Event exists, because you can create your own Javascript Events!
+     * @param {function} callback  Containing the Callback Function that will be fired when the Event occurs.
      */
-    on(eventName = RequiredArgument('eventName'), callback = RequiredArgument('callback'))
-    {
-        // @TODO (Sander) Check Type van arguments
-        // @TODO (Sander) Docs
-        // @TODO (Sander) Docs: Niet checken of event type wel bestaat, ivm dat user een custom event kan aanmaken!
+    on(eventName = RequiredArgument('eventName'), callback = RequiredArgument('callback')) {
+        ValidateArguments([
+            {type: 'string', value: eventName},
+            {type: 'function', value: callback}
+        ]);
+
         this.foreach((index, element) => {
             document.querySelector(this.getQuerySelectors()[index])
                     .addEventListener(eventName, callback);
@@ -111,14 +138,15 @@ class JsOpt extends JsOptCore
     }
 
     /**
+     * Removes an certain Event from the @var JsOptCore::elements or removes all the Events from these elements.
+     *
      * Vanilla JS:
      * document.getElementById("myDIV").removeEventListener("mousemove", myFunction);
+     *
+     * @param {string} eventName|null When null, all the Events set in @var JsOpt::eventlist will be removed from the @var JsOptCore::elements.
      */
     off(eventName = null)
     {
-        // @TODO (Sander) Check Type van arguments
-        // @TODO (Sander) Docs
-        // @TODO (Sander) Docs: Niet checken of event type wel bestaat, ivm dat user een custom event kan aanmaken!
         if (this.isEmpty(eventName) === true) {
             this.foreach((index, element) => {
                 $(this.eventlist).foreach((eventname, eventcallback) => {
@@ -127,7 +155,7 @@ class JsOpt extends JsOptCore
                 });
             });
         } else {
-            let callback = this.getEventList(eventName);
+            let callback = this.getEvent(eventName);
             if (this.isEmpty(callback) === true) {
                 if (this.debug === true) {
                     console.warn('No callback found. Check if the EventListener is set.');
@@ -143,13 +171,23 @@ class JsOpt extends JsOptCore
         return this;
     }
 
-    prepend(value)
+    /**
+     * Prepends HTML (Elements) to all the elements in @var JsOptCore::elements.
+     *
+     * @param {mixed} value
+     */
+    prepend(value = RequiredArgument('value'))
     {
         // Just inside the element, before its first child.
         this.addToElements('afterbegin', value);
         return this;
     }
 
+    /**
+     * Appends HTML (Elements) to all the elements in @var JsOptCore::elements.
+     *
+     * @param {mixed} value
+     */
     append(value)
     {
         // Just inside the element, after its last child.
@@ -206,9 +244,14 @@ class JsOpt extends JsOptCore
     }
 
     /**
+     * Adds Elements to the @var JsOptCore::elements with the position of the insertion given in @param position.
+     *
      * @link https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+     *
+     * @param {string} position
+     * @param {mixed}  value
      */
-    addToElements(position, value)
+    addToElements(position = RequiredArgument('string'), value)
     {
         if (typeof value === 'string') {
             this.foreach((index, element) => {

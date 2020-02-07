@@ -87,6 +87,11 @@ class JsOptCore
         return this;
     }
 
+    /**
+     * Loops through all the @var JsOptCore::elements and applies an Callback given in @param callback to every item.
+     *
+     * @param {function} callback
+     */
     foreach(callback = RequiredArgument('callback'))
     {
         ValidateArguments([{type: 'function', value: callback}]);
@@ -100,20 +105,11 @@ class JsOptCore
         return this;
     }
 
-    isQuerySelector(input = RequiredArgument('input'))
-    {
-        return(
-            (typeof input === 'string') &&
-            // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
-            (this.getRegex('queryselectorRegex').test(input) === true)
-        );
-    }
-
-    isEventVariable(eventVar = RequiredArgument('eventVar'))
-    {
-        return ((eventVar instanceof Event) && (this.isEmpty(eventVar.target.childNodes) === false));
-    }
-
+    /**
+     * Gets the Query Selector for every element in @var JsOptCore::elements and returns those.
+     *
+     * @return {array}
+     */
     getQuerySelectors()
     {
         let queryselectors = [];
@@ -133,6 +129,34 @@ class JsOptCore
             queryselectors.push(prefix + selector);
         }
         return queryselectors;
+    }
+
+    /**
+     * Checks if the value from @param input is a Query Selector or not.
+     *
+     * @param {string} input
+     *
+     * @return {bool} Indicating whether or not the input variable is a Query Selector.
+     */
+    isQuerySelector(input = RequiredArgument('input'))
+    {
+        return(
+            (typeof input === 'string') &&
+            // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
+            (this.getRegex('queryselectorRegex').test(input) === true)
+        );
+    }
+
+    /**
+     * Checks if the variable from @param eventVar is of the type {Event}.
+     *
+     * @param {mixed} eventVar
+     *
+     * @return {bool} Indicating whether or not the variable is a Event Variable.
+     */
+    isEventVariable(eventVar = RequiredArgument('eventVar'))
+    {
+        return ((eventVar instanceof Event) && (this.isEmpty(eventVar.target.childNodes) === false));
     }
 
     /**
@@ -193,7 +217,6 @@ const ValidateArguments = (args) => {
 
     for (let i = 0; i < args.length; i++) {
         if (typeof args[i].value != args[i].type) {
-            // @TODO (Sander) Invalidargument class
             let txt = `\n  > argument #${i} must be of type \`${args[i].type}\`, \`${typeof args[i].value}\` given.`;
             invalid_args.push(txt);
             continue;
