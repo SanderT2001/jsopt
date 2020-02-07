@@ -3,50 +3,50 @@ JsOpt is a minimalistic Library to make working with Vanilla JavaScript more ple
 
 ## Start using
 ```html
-    <!-- Start: Vendors -->
-    <!-- Javascript -->
-    <!-- JsOpt -->
-    <script src="./src/exceptions/exception.js"></script>
-    <script src="./src/exceptions/arguments/argument_exception.js"></script>
-    <script src="./src/exceptions/arguments/invalid_argument_exception.js"></script>
-    <script src="./src/exceptions/arguments/missing_argument_exception.js"></script>
-    <script src="./src/jsopt_core.js"></script>
-    <script src="./src/jsopt.js"></script>
-    <!-- End: Vendors -->
+<!-- Start: Vendors -->
+<!-- Javascript -->
+<!-- JsOpt -->
+<script src="./src/exceptions/exception.js"></script>
+<script src="./src/exceptions/arguments/argument_exception.js"></script>
+<script src="./src/exceptions/arguments/invalid_argument_exception.js"></script>
+<script src="./src/exceptions/arguments/missing_argument_exception.js"></script>
+<script src="./src/jsopt_core.js"></script>
+<script src="./src/jsopt.js"></script>
+<!-- End: Vendors -->
 ```
 
 ## Examples
 ```javascript
-    $('.div').find('.anotherdiv');
+$('.div').find('.anotherdiv');
 
-    $('.div').foreach((key, element) => {
-        // Do something...
-    });
+$('.div').foreach((key, element) => {
+    // Do something...
+});
 
-    $('.div').changeInner('Change something');
+$('.div').changeInner('Change something');
 
-    $('.div').append($('.anotherdiv'));
-    $('.div').prepend($('.anotherdiv'));
+$('.div').append($('.anotherdiv'));
+$('.div').prepend($('.anotherdiv'));
 
-    $('.div').show();
-    $('.div').hide();
+$('.div').show();
+$('.div').hide();
 
-    $('.div').attr('data-id', 123);
-    $('.div').css('display', 'none');
+$('.div').attr('data-id', 123);
+$('.div').css('display', 'none');
 
-    $(document).ready(() => {
-        // Do something...
-    });
+$(document).ready(() => {
+    // Do something...
+});
 
-    // Set Event Listener.
-    var jsoptElements = $('.div');
-    jsoptElements.on('click', (e) => {
-        // Do something...
-    });
+// Set Event Listener.
+var jsoptElements = $('.div');
+jsoptElements.on('click', (e) => {
+    // Do something...
+});
 
-    // Removes the Click Event
-    jsoptElements.off('click');
+// Removes the Click Event
+jsoptElements.off('click');
 
-    // Removes all the set Event Listeners.
-    jsoptElements.off(null);
+// Removes all the set Event Listeners.
+jsoptElements.off(null);
 ```
