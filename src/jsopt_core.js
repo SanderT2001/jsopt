@@ -6,6 +6,13 @@
  * Class containing Core Functionalities for JsOpt.
  * JsOpt is a minimalistic Library to make working with Vanilla JavaScript more plesant.
  *
+ * JsOpt accepts the following items when creating a new JsOpt Instance:
+ *   > Selector (example: '#id-of-element' or '.class-of-elements')
+ *   > Event
+ *   > Object
+ *   > Array
+ *   > String
+ *
  * @requires ECMAScript (ES) 6.* or up
  *
  * @version 0.1
@@ -25,33 +32,131 @@ class JsOptCore
      */
     elements = null;
 
+    /**
+     * @type {object}
+     * Object containing all the RegEx'es that are used in JsOpt.
+     */
+    regexCollection = {
+        queryselectorValidator: /^([#]|[.])/
+    };
+
+    /**
+     * Gets a RegEx from @var JsOptCore::regexCollection by it name given in @param key.
+     *
+     * @param {string} key
+     *
+     * @return {RegEx}|null Returns a string which is the found RegEx.
+     *                      Returns null when no RegEx could be found by the given @param key.
+     */
+    getRegex(key = RequiredArgument('key'))
+    {
+        return ((this.isEmpty(this.regexCollection[key]) === true) ? null : this.regexCollection[key]);
+    }
+
     constructor(input = RequiredArgument('input'))
     {
         // Set or get the elements based on the fact if the input is a queryselector or it is a data already.
-        this.elements = ((this.isQuerySelector(input) === true) ? document.querySelectorAll(input) : input);
-        if ((this.isEmpty() == true) && (this.debug == true)) {
+        if (this.isQuerySelector(input) === true) {
+            this.elements = document.querySelectorAll(input);
+        } else {
+            this.elements = ((this.isEventVariable(input) === true) ? input.target.childNodes : input);
+        }
+        if ((this.isEmpty() === true) && (this.debug === true)) {
             console.warn('No elements found by the given QuerySelector.');
         }
         return this;
     }
 
-    foreach(callback = RequiredArgument('callback'))
+    /**
+     * Finds DOM-Elements in the current @var JsOptCore::elements by the QuerySelector in @param selector.
+     *
+     * This will also replace the @var JsOptCore::elements with the newly found elements.
+     * When no elements are found, @var JsOptCore::elements is an empty array.
+     *
+     * @param {string} selector
+     */
+    find(selector = RequiredArgument('querySelector'))
     {
-        ValidateArguments([{type: 'function', value: callback}]);
+        ValidateArguments([{type: 'string', value: selector, regex: this.getRegex('queryselectorValidator'), regexExplanation: 'QuerySelector'}]);
 
-        for (var i = 0; i < this.elements.length; i++) {
-            callback(i, this.elements[i]);
+        this.elements = document.querySelector(this.getQuerySelectors()[0])
+                                .querySelectorAll(selector);
+        if ((this.isEmpty() === true) && (this.debug === true)) {
+            console.warn('No elements found by the given QuerySelector.');
         }
         return this;
     }
 
-    isQuerySelector(input)
+    /**
+     * Loops through all the @var JsOptCore::elements and applies an Callback given in @param callback to every item.
+     *
+     * @param {function} callback
+     */
+    foreach(callback = RequiredArgument('callback'))
+    {
+        ValidateArguments([{type: 'function', value: callback}]);
+
+        let isObject = (typeof this.elements === 'object');
+        let iterations = (this.elements.length == null) ? Object.keys(this.elements).length : this.elements.length;
+        for (var i = 0; i < iterations; i++) {
+            let index = (isObject === true) ? Object.keys(this.elements)[i] : i;
+            callback(index, this.elements[index]);
+        }
+        return this;
+    }
+
+    /**
+     * Gets the Query Selector for every element in @var JsOptCore::elements and returns those.
+     *
+     * @return {array}
+     */
+    getQuerySelectors()
+    {
+        let queryselectors = [];
+        for (var i = 0; i < this.elements.length; i++) {
+            let element = this.elements[i];
+            let prefix = null;
+            let selector = null;
+            if ((this.isEmpty(element.id) === true) && (this.isEmpty(element.className) === false)) {
+                // class selector
+                prefix = '.';
+                selector = element.className;
+            } else if ((this.isEmpty(element.id) === false) && (this.isEmpty(element.className) === true)) {
+                // id selector
+                prefix = '#';
+                selector = element.id;
+            }
+            queryselectors.push(prefix + selector);
+        }
+        return queryselectors;
+    }
+
+    /**
+     * Checks if the value from @param input is a Query Selector or not.
+     *
+     * @param {string} input
+     *
+     * @return {bool} Indicating whether or not the input variable is a Query Selector.
+     */
+    isQuerySelector(input = RequiredArgument('input'))
     {
         return(
             (typeof input === 'string') &&
             // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
-            (/^([#]|[.])/.test(input) === true)
+            (this.getRegex('queryselectorRegex').test(input) === true)
         );
+    }
+
+    /**
+     * Checks if the variable from @param eventVar is of the type {Event}.
+     *
+     * @param {mixed} eventVar
+     *
+     * @return {bool} Indicating whether or not the variable is a Event Variable.
+     */
+    isEventVariable(eventVar = RequiredArgument('eventVar'))
+    {
+        return ((eventVar instanceof Event) && (this.isEmpty(eventVar.target.childNodes) === false));
     }
 
     /**
@@ -111,10 +216,8 @@ const ValidateArguments = (args) => {
     let invalid_args = [];
 
     for (let i = 0; i < args.length; i++) {
-        // @TODO (Sander) Invalidargument class
-        let txt = `\n  > argument #${i} must be of type \`${args[i].type}\`, \`${typeof args[i].value}\` given.`;
-
         if (typeof args[i].value != args[i].type) {
+            let txt = `\n  > argument #${i} must be of type \`${args[i].type}\`, \`${typeof args[i].value}\` given.`;
             invalid_args.push(txt);
             continue;
         }
@@ -123,7 +226,7 @@ const ValidateArguments = (args) => {
             (args[i].regex != null) &&
             (new RegExp(args[i].regex).test(args[i].value) === false)
         ) {
-            // @TODO (Sander) Ook regex error in txt
+            let txt = `\n  > argument #${i} must be a \`${args[i].regexExplanation}\`, \`${args[i].value}\` given.`;
             invalid_args.push(txt);
             continue;
         }
