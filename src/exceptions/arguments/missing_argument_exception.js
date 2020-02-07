@@ -23,8 +23,9 @@ class MissingArgumentException extends ArgumentException
     getOutputMessage()
     {
         let output = this.defaultMessage;
-        if (this.name != null)
+        if (this.name != null) {
             output += (` \`${this.name}\``);
+        }
         return output;
     }
 }
