@@ -6,12 +6,7 @@ JsOpt is a minimalistic Library to make working with Vanilla JavaScript more ple
 <!-- Start: Vendors -->
 <!-- Javascript -->
 <!-- JsOpt -->
-<script src="./src/exceptions/exception.js"></script>
-<script src="./src/exceptions/arguments/argument_exception.js"></script>
-<script src="./src/exceptions/arguments/invalid_argument_exception.js"></script>
-<script src="./src/exceptions/arguments/missing_argument_exception.js"></script>
-<script src="./src/jsopt_core.js"></script>
-<script src="./src/jsopt.js"></script>
+<script src="./src/jsopt-all.js"></script>
 <!-- End: Vendors -->
 ```
 
