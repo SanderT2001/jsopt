@@ -143,7 +143,7 @@ class JsOptCore
         return(
             (typeof input === 'string') &&
             // Check if the given selector start with `.` (class element selector) or `#` (id element selector).
-            (this.getRegex('queryselectorRegex').test(input) === true)
+            (this.getRegex('queryselectorValidator').test(input) === true)
         );
     }
 
