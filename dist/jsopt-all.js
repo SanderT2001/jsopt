@@ -1,4 +1,24 @@
 /**
+ * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ * JsOpt | JavaScript Optionalities
+ * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * JsOpt is a minimalistic Library to make working with Vanilla JavaScript more plesant.
+ *
+ * JsOpt accepts the following items when creating a new JsOpt Instance:
+ *   > Selector (example: '#id-of-element' or '.class-of-elements')
+ *   > Event
+ *   > Object
+ *   > Array
+ *   > String
+ *
+ * @requires ECMAScript (ES) 6.* or up
+ *
+ * @version 0.1
+ * @author Sander Tuinstra <sandert2001@hotmail.com>
+ */
+
+/**
  * An Base Exception
  *
  * @throws {Error}
@@ -169,7 +189,7 @@ class JsOptCore
      * Telling whether or not this instance is running in Debug mode.
      * When true, JsOptCore will show some debug information while running.
      */
-    debug = true;
+    debug = false;
 
     /**
      * @type {mixed}
