@@ -6,7 +6,7 @@ JsOpt is a minimalistic Library to make working with Vanilla JavaScript more ple
 <!-- Start: Vendors -->
 <!-- Javascript -->
 <!-- JsOpt -->
-<script src="./src/jsopt-all.js"></script>
+<script src="jsopt-all.js"></script>
 <!-- End: Vendors -->
 ```
 
